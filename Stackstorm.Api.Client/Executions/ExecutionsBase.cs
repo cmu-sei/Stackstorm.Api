@@ -16,7 +16,7 @@ using NLog;
 using Stackstorm.Api.Client;
 using Stackstorm.Api.Client.Models;
 
-namespace stackstorm.api.client.Executions
+namespace Stackstorm.Api.Client.Executions
 {
     public class ExecutionsBase
     {

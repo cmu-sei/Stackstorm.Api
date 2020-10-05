@@ -13,10 +13,12 @@ namespace Stackstorm.Connector
     public class StackstormConnector
     {
         public VSphere VSphere { get; private set; }
+        public Core Core { get; private set; }
         
         public StackstormConnector()
         {
             this.VSphere = new VSphere();
+            this.Core = new Core();
         }
     }
 }

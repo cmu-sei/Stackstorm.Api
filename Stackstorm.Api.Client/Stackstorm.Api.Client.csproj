@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>netcoreapp2.2</TargetFramework>
         <LangVersion>latest</LangVersion>
-        <RootNamespace>stackstorm.api.client</RootNamespace>
+        <RootNamespace>Stackstorm.Api.Client</RootNamespace>
         <PackageId>Stackstorm.Api.Client</PackageId>
         <Version>0.0.0</Version>
         <Authors>CERT.CWD</Authors>

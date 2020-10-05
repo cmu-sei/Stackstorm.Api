@@ -9,7 +9,7 @@ DM20-0181
 */
 
 using System.Threading.Tasks;
-using stackstorm.api.client.Executions;
+using Stackstorm.Api.Client.Executions;
 using Stackstorm.Api.Client.Apis;
 
 namespace Stackstorm.Api.Client

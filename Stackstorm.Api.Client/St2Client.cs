@@ -20,7 +20,7 @@ using Stackstorm.Api.Client.Models;
 using Stackstorm.Api.Client.Exceptions;
 using RestSharp;
 using RestSharp.Authenticators;
-using stackstorm.api.client.Executions;
+using Stackstorm.Api.Client.Executions;
 using Stackstorm.Api.Client.Extensions;
 
 namespace Stackstorm.Api.Client
