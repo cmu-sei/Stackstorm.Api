@@ -1,0 +1,91 @@
+name: CI
+on:
+  release:
+    types: [ "published" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '2.2.103'
+          
+      - name: Get Latest Release
+        id: get_release
+        uses: bruceadams/get-release@v1.2.1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: Set Release Version
+        run: |
+          VERSION=development
+          if [[ $GITHUB_REF == refs/tags/* ]]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          elif [[ $GITHUB_REF == refs/heads/* ]]; then
+            VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
+          fi
+          echo ::set-env name=release_version::$VERSION
+
+      - name: Build Stackstorm.Api.Client
+        run: |
+          dotnet build -c Release Stackstorm.Api.Client                           \
+          /p:version=${{ env.release_version }}                                   \
+          /p:authors="Carnegie Mellon University/Software Engineering Institute"  \
+          /p:owners="Carnegie Mellon University/Software Engineering Institute"   \
+          /p:description="Stackstorm.Api.Client"   
+          
+          cd Stackstorm.Api.Client/artifacts
+          mv Stackstorm.Api.Client.${{ env.release_version }}.nupkg Stackstorm.Api.Client.${{ env.release_version }}.nupkg.bak
+          unzip Stackstorm.Api.Client.${{ env.release_version }}.nupkg.bak -d tmp
+          chmod -R 755 tmp
+          cd tmp
+          sed -i '/<\/version>/a \    <license type="expression">MIT<\/license>' Stackstorm.Api.Client.nuspec
+          sed -i '/<\/version>/a \    <licenseUrl>https:\/\/licenses.nuget.org\/MIT<\/licenseUrl>' Stackstorm.Api.Client.nuspec
+          sed -i '/<\/version>/a \    <projectUrl>https:\/\/github.com\/cmu-sei\/crucible<\/projectUrl>' Stackstorm.Api.Client.nuspec
+          sed -i '/<\/version>/a \    <repository type="git" url="https:\/\/github.com\/cmu-sei\/crucible.git" \/>' Stackstorm.Api.Client.nuspec
+          zip -r ../Stackstorm.Api.Client.${{ env.release_version }}.nupkg *
+          
+      - name: Build Stackstorm.Connector
+        run: |
+          dotnet build -c Release Stackstorm.Connector                            \
+          /p:version=${{ env.release_version }}                                   \
+          /p:authors="Carnegie Mellon University/Software Engineering Institute"  \
+          /p:owners="Carnegie Mellon University/Software Engineering Institute"   \
+          /p:description="Stackstorm.Connector"   
+          
+          cd Stackstorm.Connector/artifacts
+          mv Stackstorm.Connector.${{ env.release_version }}.nupkg Stackstorm.Connector.${{ env.release_version }}.nupkg.bak
+          unzip Stackstorm.Connector.${{ env.release_version }}.nupkg.bak -d tmp
+          chmod -R 755 tmp
+          cd tmp
+          sed -i '/<\/version>/a \    <license type="expression">MIT<\/license>' Stackstorm.Connector.nuspec
+          sed -i '/<\/version>/a \    <licenseUrl>https:\/\/licenses.nuget.org\/MIT<\/licenseUrl>' Stackstorm.Connector.nuspec
+          sed -i '/<\/version>/a \    <projectUrl>https:\/\/github.com\/cmu-sei\/crucible<\/projectUrl>' Stackstorm.Connector.nuspec
+          sed -i '/<\/version>/a \    <repository type="git" url="https:\/\/github.com\/cmu-sei\/crucible.git" \/>' Stackstorm.Connector.nuspec
+          zip -r ../Stackstorm.Connector.${{ env.release_version }}.nupkg *
+          
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: Stackstorm.Connector/artifacts/Stackstorm.Connector.${{ env.release_version }}.nupkg
+          asset_name: Stackstorm.Connector.${{ env.release_version }}.nupkg
+          asset_content_type: application/zip
+      - name: Upload Release Asset
+        id: upload-release-asset2
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.get_release.outputs.upload_url }}
+          asset_path: Stackstorm.Api.Client/artifacts/Stackstorm.Api.Client.${{ env.release_version }}.nupkg
+          asset_name: Stackstorm.Api.Client.${{ env.release_version }}.nupkg
+          asset_content_type: application/zip
