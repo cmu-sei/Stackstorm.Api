@@ -68,7 +68,14 @@ jobs:
           sed -i '/<\/version>/a \    <projectUrl>https:\/\/github.com\/cmu-sei\/crucible<\/projectUrl>' Stackstorm.Connector.nuspec
           sed -i '/<\/version>/a \    <repository type="git" url="https:\/\/github.com\/cmu-sei\/crucible.git" \/>' Stackstorm.Connector.nuspec
           zip -r ../Stackstorm.Connector.${{ env.release_version }}.nupkg *
-          
+                
+      - name: Publish to Nuget.org as Unlisted
+        run: |
+          dotnet nuget push Stackstorm.Connector/artifacts/Stackstorm.Connector.${{ env.release_version }}.nupkg -k ${{ secrets.NUGET_APIKEY }} -s https://api.nuget.org/v3/index.json
+          dotnet nuget delete Stackstorm.Connector ${{ env.release_version }} --non-interactive -k ${{ secrets.NUGET_APIKEY_UNLIST }} -s https://api.nuget.org/v3/index.json
+          dotnet nuget push Stackstorm.Api.Client/artifacts/Stackstorm.Api.Client.${{ env.release_version }}.nupkg -k ${{ secrets.NUGET_APIKEY }} -s https://api.nuget.org/v3/index.json
+          dotnet nuget delete Stackstorm.Api.Client ${{ env.release_version }} --non-interactive -k ${{ secrets.NUGET_APIKEY_UNLIST }} -s https://api.nuget.org/v3/index.json
+      
       - name: Upload Release Asset
         id: upload-release-asset 
         uses: actions/upload-release-asset@v1
