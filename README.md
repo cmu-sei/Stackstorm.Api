@@ -1,16 +1,9 @@
-# Stackstorm
+# Stackstorm.Api Readme
 
-These class library projects connects CWD systems to Stackstorm via its API. 
+These class library projects connect Crucible systems to Stackstorm via the Stackstorm API. The main components are as follows:
 
-There are the following main components to this application:
-
-#### Stackstorm.Connector
-
-Formatted connector that gives defined objects in and out of a given method.
-
-#### Stackstorm.Api.Client
-
-Raw connector to Stackstorm API. You have to know/look up parameter dictionary values.
+- **Stackstorm.Connector:** A formatted connector that gives defined objects in and out of a given method.
+- **Stackstorm.Api.Client:** A raw connector to Stackstorm API. You must know parameter dictionary values.
 
 ## Reporting bugs and requesting features
 
@@ -21,3 +14,7 @@ Include as much detail as possible including steps to reproduce, specific app in
 Have a good idea for a new feature? Submit all new feature requests through the [cmu-sei/crucible issue tracker](https://github.com/cmu-sei/crucible/issues). 
 
 Include the reasons why you're requesting the new feature and how it might benefit other Crucible users.
+
+## License
+
+Copyright 2021 Carnegie Mellon University. See the [LICENSE.md](./LICENSE.md) files for details.
