@@ -5,6 +5,8 @@ These class library projects connect Crucible systems to Stackstorm via the Stac
 - **Stackstorm.Connector:** A formatted connector that gives defined objects in and out of a given method.
 - **Stackstorm.Api.Client:** A raw connector to Stackstorm API. You must know parameter dictionary values.
 
+This project produces nuget packages [Stackstorm.Api.Client](https://www.nuget.org/packages/Stackstorm.Api.Client) and [Stackstorm.Connector](https://www.nuget.org/packages/Stackstorm.Connector/) that are consumed by the [Steamfitter.Api](https://github.com/cmu-sei/Steamfitter.Api) project.
+
 ## Reporting bugs and requesting features
 
 Think you found a bug? Please report all Crucible bugs - including bugs for the individual Crucible apps - in the [cmu-sei/crucible issue tracker](https://github.com/cmu-sei/crucible/issues). 
