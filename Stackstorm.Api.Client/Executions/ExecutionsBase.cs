@@ -14,13 +14,13 @@ namespace stackstorm.api.client.Executions
     {
         private ISt2Client _host;
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
-        
+
         protected ExecutionsBase(ISt2Client host)
         {
             _host = host ?? throw new ArgumentNullException(nameof(host));
         }
-        
-        internal async Task<Execution> AddExecution(string action, Dictionary<string, string> parameters)
+
+        internal async Task<Execution> AddExecution(string action, Dictionary<string, object> parameters)
         {
             if (!_host.HasToken())
             {
@@ -28,17 +28,17 @@ namespace stackstorm.api.client.Executions
             }
             try
             {
-                var tempParameters = new Dictionary<string, string>();
-                //delete any empty parameters
-                if (parameters != null)
-                {
-                    foreach (var p in parameters)
-                        if (!string.IsNullOrEmpty(p.Value))
-                            tempParameters.Add(p.Key, p.Value);
-                }
+                // var tempParameters = new Dictionary<string, object>();
+                // //delete any empty parameters
+                // if (parameters != null)
+                // {
+                //     foreach (var p in parameters)
+                //         if (!string.IsNullOrEmpty(p.Value))
+                //             tempParameters.Add(p.Key, p.Value);
+                // }
 
-                var executionRequest = new ExecutionRequest(action, tempParameters);
-                
+                var executionRequest = new ExecutionRequest(action, parameters);
+
                 //var requestString = Newtonsoft.Json.JsonConvert.SerializeObject(executionRequest);
                 //Console.WriteLine(requestString);
 

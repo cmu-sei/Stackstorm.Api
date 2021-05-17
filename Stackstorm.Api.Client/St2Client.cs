@@ -79,6 +79,7 @@ namespace Stackstorm.Api.Client
             Rules = new RulesApi(this);
             VSphere = new VSphere(this);
             Core = new Core(this);
+            Email = new Email(this);
         }
 
         /// <summary> Refresh the auth token. </summary>
@@ -218,8 +219,9 @@ namespace Stackstorm.Api.Client
                 }
             }
         }
-        
+
         public IVSphere VSphere { get; private set; }
+        public IEmail Email { get; private set; }
         public ICore Core { get; private set; }
 
         /// <summary> Accessor for the Actions related methods. </summary>
