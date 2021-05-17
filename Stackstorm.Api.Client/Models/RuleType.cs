@@ -7,6 +7,6 @@ namespace Stackstorm.Api.Client.Models
     public class RuleType
     {
         public string @ref { get; set; }
-        public Dictionary<string, string> parameters { get; set; }
+        public Dictionary<string, object> parameters { get; set; }
     }
 }

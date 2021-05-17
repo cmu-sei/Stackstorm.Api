@@ -26,7 +26,7 @@ namespace Stackstorm.Api.Client.Test
         public async void GetVmsReturnsArrayOfVms()
         {
             var cluster = "[\"domain-c9\"]";
-            var executionResult = await this.Client.VSphere.GetVms(new Dictionary<string, string> {{"clusters", cluster}});
+            var executionResult = await this.Client.VSphere.GetVms(new Dictionary<string, object> { { "clusters", cluster } });
             var j = JObject.Parse(executionResult.result.ToString());
 
             var hasVms = false;
@@ -48,8 +48,8 @@ namespace Stackstorm.Api.Client.Test
         public async void GetVmDetailReturnsUuid()
         {
             var vmId = "[\"vm-303\"]"; //this is a moid
-            
-            var executionResult = await this.Client.VSphere.VmGetDetail(new Dictionary<string, string> {{"vm_ids", vmId}});
+
+            var executionResult = await this.Client.VSphere.VmGetDetail(new Dictionary<string, object> { { "vm_ids", vmId } });
             var tokens = executionResult.result.ToString().ToJTokens();
             foreach (var token in tokens)
             {
@@ -63,8 +63,8 @@ namespace Stackstorm.Api.Client.Test
         public async void GetGuestInfoReturns()
         {
             var vmId = "[\"vm-303\"]"; //this is a moid
-            
-            var executionResult = await this.Client.VSphere.VmGetGuestInfo(new Dictionary<string, string> {{"vm_ids", vmId}});
+
+            var executionResult = await this.Client.VSphere.VmGetGuestInfo(new Dictionary<string, object> { { "vm_ids", vmId } });
             var tokens = executionResult.result.ToString().ToJTokens();
 
             foreach (var token in tokens)
@@ -79,9 +79,9 @@ namespace Stackstorm.Api.Client.Test
         public async void GetMoidReturnsMoid()
         {
             var vmName = "[\"Win10.10\"]";
-            var executionResult = await this.Client.VSphere.GetMoid(new Dictionary<string, string> {{"object_names", vmName}, {"object_type", "VirtualMachine"}});
-            var j = ((JToken) executionResult.result)["result"];
-            
+            var executionResult = await this.Client.VSphere.GetMoid(new Dictionary<string, object> { { "object_names", vmName }, { "object_type", "VirtualMachine" } });
+            var j = ((JToken)executionResult.result)["result"];
+
             foreach (var prop in j.OfType<JProperty>())
             {
                 Assert.True(!string.IsNullOrEmpty(prop.Value.ToString()));
@@ -93,9 +93,9 @@ namespace Stackstorm.Api.Client.Test
         public async void VmGetMoidReturnsMoid()
         {
             var vmName = "[\"Win10.10\"]";
-            var executionResult = await this.Client.VSphere.VmGetMoid(new Dictionary<string, string> {{"vm_names", vmName}});
-            var j = ((JToken) executionResult.result)["result"];
-            
+            var executionResult = await this.Client.VSphere.VmGetMoid(new Dictionary<string, object> { { "vm_names", vmName } });
+            var j = ((JToken)executionResult.result)["result"];
+
             foreach (var prop in j.OfType<JProperty>())
             {
                 Assert.True(!string.IsNullOrEmpty(prop.Value.ToString()));
@@ -106,8 +106,8 @@ namespace Stackstorm.Api.Client.Test
         [Fact]
         public async void GuestFileRead()
         {
-            var executionResult = await this.Client.VSphere.GuestFileRead(new Dictionary<string, string> {{"vm_id", "vm-302"}, {"username", "Developer"}, {"password", "develop@1"}, {"guest_file", @"C:\Users\Developer\testGet.txt"}});
-            var fileTextObject = ((JObject) executionResult.result)["result"];
+            var executionResult = await this.Client.VSphere.GuestFileRead(new Dictionary<string, object> { { "vm_id", "vm-302" }, { "username", "Developer" }, { "password", "develop@1" }, { "guest_file", @"C:\Users\Developer\testGet.txt" } });
+            var fileTextObject = ((JObject)executionResult.result)["result"];
 
             Assert.NotNull(fileTextObject);
             Assert.True(!string.IsNullOrEmpty(fileTextObject.ToString()));
@@ -116,14 +116,14 @@ namespace Stackstorm.Api.Client.Test
         [Fact]
         public async void VmTurnOn()
         {
-            var executionResult = await this.Client.VSphere.VmPowerOn(new Dictionary<string, string> {{"vm_id", "vm-303"}});
+            var executionResult = await this.Client.VSphere.VmPowerOn(new Dictionary<string, object> { { "vm_id", "vm-303" } });
             Assert.NotNull(executionResult);
         }
-        
+
         [Fact]
         public async void VmTurnOff()
         {
-            var executionResult = await this.Client.VSphere.VmPowerOff(new Dictionary<string, string> {{"vm_id", "vm-303"}});
+            var executionResult = await this.Client.VSphere.VmPowerOff(new Dictionary<string, object> { { "vm_id", "vm-303" } });
             Assert.NotNull(executionResult);
         }
 

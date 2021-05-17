@@ -6,18 +6,18 @@ namespace Stackstorm.Api.Client.Models
 {
     public class ExecutionRequest
     {
-        public Dictionary<string, string> parameters { get; private set; }
- 
+        public Dictionary<string, object> parameters { get; private set; }
+
         public string action { get; private set; }
 
         public ExecutionRequest()
         {
-            this.parameters = new Dictionary<string, string>();
+            this.parameters = new Dictionary<string, object>();
         }
 
-        public ExecutionRequest(string action, Dictionary<string, string> parameterDictionary)
+        public ExecutionRequest(string action, Dictionary<string, object> parameterDictionary)
         {
-            this.parameters = parameterDictionary ?? new Dictionary<string, string>();
+            this.parameters = parameterDictionary ?? new Dictionary<string, object>();
             this.action = action;
         }
 
@@ -36,7 +36,7 @@ namespace Stackstorm.Api.Client.Models
         public void AddParameter(string key, IEnumerable<string> values)
         {
             if (values == null) return;
-            
+
             foreach (var val in values)
             {
                 AddParameter(key, val);

@@ -8,24 +8,23 @@ using Newtonsoft.Json.Linq;
 using Stackstorm.Connector.Models.Vsphere;
 using Stackstorm.Api.Client;
 using Stackstorm.Api.Client.Extensions;
+using NLog.Fluent;
 
 namespace Stackstorm.Connector
 {
-    public class VSphere : StackstormBase
+    public class VSphere
     {
-        public VSphere()
-        {
+        private readonly St2Client _client;
 
+        public VSphere(St2Client client)
+        {
+            _client = client;
         }
 
-        public VSphere(string url, string username, string password) : base(url, username, password)
-        {
-            
-        }
         public async Task<Responses.VmGuid> GetGuid()
         {
             var returnObject = new Responses.VmGuid();
-            var executionResult = await this.Client.VSphere.Hello(null);
+            var executionResult = await _client.VSphere.Hello(null);
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
@@ -52,7 +51,7 @@ namespace Stackstorm.Connector
         public async Task<Responses.VmList> GetVms(IEnumerable<string> clusters)
         {
             var returnObject = new Responses.VmList();
-            var executionResult = await this.Client.VSphere.GetVms(new Dictionary<string, string> {{"clusters", clusters.ToSt2Array()}});
+            var executionResult = await _client.VSphere.GetVms(new Dictionary<string, object> { { "clusters", clusters.ToSt2Array() } });
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
@@ -83,7 +82,7 @@ namespace Stackstorm.Connector
         public async Task<Responses.VmList> GetVmsWithUuid(IEnumerable<string> clusters)
         {
             var returnObject = new Responses.VmList();
-            var executionResult = await this.Client.VSphere.GetVmsWithUuid(new Dictionary<string, string> {{"clusters", clusters.ToSt2Array()}});
+            var executionResult = await _client.VSphere.GetVmsWithUuid(new Dictionary<string, object> { { "clusters", clusters.ToSt2Array() } });
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
@@ -114,7 +113,7 @@ namespace Stackstorm.Connector
         public async Task<Responses.VmDetailList> GetVmDetails(IEnumerable<string> moids)
         {
             var returnObject = new Responses.VmDetailList();
-            var executionResult = await this.Client.VSphere.VmGetDetail(new Dictionary<string, string> {{"vm_ids", moids.ToSt2Array()}});
+            var executionResult = await _client.VSphere.VmGetDetail(new Dictionary<string, object> { { "vm_ids", moids.ToSt2Array() } });
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
@@ -160,14 +159,14 @@ namespace Stackstorm.Connector
         public async Task<Responses.VmList> GetMoids(Requests.Moids request)
         {
             var returnObject = new Responses.VmList();
-            var executionResult = await this.Client.VSphere.GetMoid(new Dictionary<string, string>
+            var executionResult = await _client.VSphere.GetMoid(new Dictionary<string, object>
                 {{"object_names", request.MachineNames.ToSt2Array()}, {"object_type", "VirtualMachine"}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
             {
                 returnObject.Id = executionResult.id;
-                var j = ((JToken) executionResult.result)["result"];
+                var j = ((JToken)executionResult.result)["result"];
 
                 foreach (var prop in j.OfType<JProperty>())
                 {
@@ -187,14 +186,14 @@ namespace Stackstorm.Connector
         public async Task<Responses.VmStringValue> GuestFileRead(Requests.FileRead request)
         {
             var returnObject = new Responses.VmStringValue();
-            var executionResult = await this.Client.VSphere.GuestFileRead(new Dictionary<string, string>
+            var executionResult = await _client.VSphere.GuestFileRead(new Dictionary<string, object>
                 {{"vm_id", request.Moid}, {"username", request.Username}, {"password", request.Password}, {"guest_file", request.GuestFilePath}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
             {
                 returnObject.Id = executionResult.id;
-                var fileTextObject = ((JObject) executionResult.result)["result"];
+                var fileTextObject = ((JObject)executionResult.result)["result"];
                 returnObject.Value = fileTextObject.ToString();
             }
             catch (Exception e)
@@ -210,17 +209,17 @@ namespace Stackstorm.Connector
         public async Task<Responses.VmStringValue> GuestFileWrite(Requests.FileWrite request)
         {
             var returnObject = new Responses.VmStringValue();
-            var executionResult = await this.Client.VSphere.GuestFileUploadContent(new Dictionary<string, string>
-                {{"vm_id", request.Moid}, {"username", request.Username}, {"password", request.Password}, 
+            var executionResult = await _client.VSphere.GuestFileUploadContent(new Dictionary<string, object>
+                {{"vm_id", request.Moid}, {"username", request.Username}, {"password", request.Password},
                     {"guest_file_path", request.GuestFilePath}, {"file_content", request.GuestFileContent}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
             {
                 returnObject.Id = executionResult.id;
-                var commandTextObject = (JObject) executionResult.result;
+                var commandTextObject = (JObject)executionResult.result;
                 var result = commandTextObject.GetValue("result");
-                returnObject.Value = (string) result;
+                returnObject.Value = (string)result;
             }
             catch (Exception e)
             {
@@ -235,15 +234,15 @@ namespace Stackstorm.Connector
         public async Task<Responses.VmStringValue> GuestCommand(Requests.Command request)
         {
             var returnObject = new Responses.VmStringValue();
-            var executionResult = await this.Client.VSphere.GuestProcessRun(new Dictionary<string, string>
-                {{"vm_id", request.Moid}, {"username", request.Username}, {"password", request.Password}, 
+            var executionResult = await _client.VSphere.GuestProcessRun(new Dictionary<string, object>
+                {{"vm_id", request.Moid}, {"username", request.Username}, {"password", request.Password},
                     {"command", request.CommandText}, {"arguments", request.CommandArgs}, {"workdir", request.CommandWorkDirectory}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
             {
                 returnObject.Id = executionResult.id;
-                var commandTextObject = ((JObject) executionResult.result).First.First["stdout"];
+                var commandTextObject = ((JObject)executionResult.result).First.First["stdout"];
                 returnObject.Value = commandTextObject.ToString();
             }
             catch (Exception e)
@@ -259,15 +258,15 @@ namespace Stackstorm.Connector
         public async Task<Responses.VmStringValue> GuestCommandFast(Requests.Command request)
         {
             var returnObject = new Responses.VmStringValue();
-            var executionResult = await this.Client.VSphere.GuestProcessRunFast(new Dictionary<string, string>
-                {{"vm_id", request.Moid}, {"username", request.Username}, {"password", request.Password}, 
+            var executionResult = await _client.VSphere.GuestProcessRunFast(new Dictionary<string, object>
+                {{"vm_id", request.Moid}, {"username", request.Username}, {"password", request.Password},
                     {"command", request.CommandText}, {"arguments", request.CommandArgs}, {"workdir", request.CommandWorkDirectory}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
             {
                 returnObject.Id = executionResult.id;
-                var commandTextObject = ((JObject) executionResult.result)["result"];
+                var commandTextObject = ((JObject)executionResult.result)["result"];
                 returnObject.Value = commandTextObject.ToString();
             }
             catch (Exception e)
@@ -283,18 +282,18 @@ namespace Stackstorm.Connector
         public async Task<Responses.Power> GuestPowerOn(string moid)
         {
             var response = new Responses.Power();
-            var executionResult = await this.Client.VSphere.VmPowerOn(new Dictionary<string, string>
+            var executionResult = await _client.VSphere.VmPowerOn(new Dictionary<string, object>
                 {{"vm_id", moid}});
-            
+
             response.Id = executionResult.id;
             response.State = Responses.PowerStates.On;
             return response;
         }
-        
+
         public async Task<Responses.Power> GuestPowerOff(string moid)
         {
             var response = new Responses.Power();
-            var executionResult = await this.Client.VSphere.VmPowerOff(new Dictionary<string, string>
+            var executionResult = await _client.VSphere.VmPowerOff(new Dictionary<string, object>
                 {{"vm_id", moid}});
 
             response.Id = executionResult.id;
@@ -305,14 +304,14 @@ namespace Stackstorm.Connector
         public async Task<Responses.VmStringValue> CreateVmFromTemplate(Requests.CreateVmFromTemplate request)
         {
             var returnObject = new Responses.VmStringValue();
-            var executionResult = await this.Client.VSphere.CreateVmFromTemplate(new Dictionary<string, string>
+            var executionResult = await _client.VSphere.CreateVmFromTemplate(new Dictionary<string, object>
                 {{"template_id", request.TemplateMoid}, {"name", request.Name}, {"datacenter_id", request.DataCenter}, {"datastore_id", request.DataStore}, {"resourcepool_id", request.ResourcePool}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
             {
                 returnObject.Id = executionResult.id;
-                var fileTextObject = ((JObject) executionResult.result)["result"];
+                var fileTextObject = ((JObject)executionResult.result)["result"];
                 returnObject.Value = fileTextObject.ToString();
             }
             catch (Exception e)
@@ -328,14 +327,14 @@ namespace Stackstorm.Connector
         public async Task<Responses.VmStringValue> RemoveVm(string moid)
         {
             var returnObject = new Responses.VmStringValue();
-            var executionResult = await this.Client.VSphere.VmRemove(new Dictionary<string, string>
+            var executionResult = await _client.VSphere.VmRemove(new Dictionary<string, object>
                 {{"vm_id", moid}, {"delete_permanently", "true"}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try
             {
                 returnObject.Id = executionResult.id;
-                var fileTextObject = ((JObject) executionResult.result)["result"];
+                var fileTextObject = ((JObject)executionResult.result)["result"];
                 returnObject.Value = fileTextObject.ToString();
             }
             catch (Exception e)
@@ -347,6 +346,5 @@ namespace Stackstorm.Connector
 
             return returnObject;
         }
-
     }
 }
