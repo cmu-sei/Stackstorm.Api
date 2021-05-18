@@ -1,7 +1,7 @@
 name: Build Client Packages
 on:
   release:
-    types: [ "published" ]
+    types: ['published']
 
 jobs:
   build:
@@ -9,12 +9,12 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
-        
+
       - name: Setup dotnet
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '2.2.103'
-          
+
       - name: Get Latest Release
         id: get_release
         uses: bruceadams/get-release@v1.2.1
@@ -29,7 +29,7 @@ jobs:
           elif [[ $GITHUB_REF == refs/heads/* ]]; then
             VERSION=$(echo ${GITHUB_REF#refs/heads/} | sed -r 's#/+#-#g')
           fi
-          echo ::set-env name=release_version::$VERSION
+          echo "release_version=$VERSION" >> $GITHUB_ENV
 
       - name: Build Stackstorm.Api.Client
         run: |
@@ -37,8 +37,8 @@ jobs:
           /p:version=${{ env.release_version }}                                   \
           /p:authors="Carnegie Mellon University/Software Engineering Institute"  \
           /p:owners="Carnegie Mellon University/Software Engineering Institute"   \
-          /p:description="Stackstorm.Api.Client"   
-          
+          /p:description="Stackstorm.Api.Client"
+
           cd Stackstorm.Api.Client/artifacts
           mv Stackstorm.Api.Client.${{ env.release_version }}.nupkg Stackstorm.Api.Client.${{ env.release_version }}.nupkg.bak
           unzip Stackstorm.Api.Client.${{ env.release_version }}.nupkg.bak -d tmp
@@ -49,15 +49,15 @@ jobs:
           sed -i '/<\/version>/a \    <projectUrl>https:\/\/github.com\/cmu-sei\/crucible<\/projectUrl>' Stackstorm.Api.Client.nuspec
           sed -i '/<\/version>/a \    <repository type="git" url="https:\/\/github.com\/cmu-sei\/crucible.git" \/>' Stackstorm.Api.Client.nuspec
           zip -r ../Stackstorm.Api.Client.${{ env.release_version }}.nupkg *
-          
+
       - name: Build Stackstorm.Connector
         run: |
           dotnet build -c Release Stackstorm.Connector                            \
           /p:version=${{ env.release_version }}                                   \
           /p:authors="Carnegie Mellon University/Software Engineering Institute"  \
           /p:owners="Carnegie Mellon University/Software Engineering Institute"   \
-          /p:description="Stackstorm.Connector"   
-          
+          /p:description="Stackstorm.Connector"
+
           cd Stackstorm.Connector/artifacts
           mv Stackstorm.Connector.${{ env.release_version }}.nupkg Stackstorm.Connector.${{ env.release_version }}.nupkg.bak
           unzip Stackstorm.Connector.${{ env.release_version }}.nupkg.bak -d tmp
@@ -68,16 +68,16 @@ jobs:
           sed -i '/<\/version>/a \    <projectUrl>https:\/\/github.com\/cmu-sei\/crucible<\/projectUrl>' Stackstorm.Connector.nuspec
           sed -i '/<\/version>/a \    <repository type="git" url="https:\/\/github.com\/cmu-sei\/crucible.git" \/>' Stackstorm.Connector.nuspec
           zip -r ../Stackstorm.Connector.${{ env.release_version }}.nupkg *
-                
+
       - name: Publish to Nuget.org as Unlisted
         run: |
           dotnet nuget push Stackstorm.Connector/artifacts/Stackstorm.Connector.${{ env.release_version }}.nupkg -k ${{ secrets.NUGET_APIKEY }} -s https://api.nuget.org/v3/index.json
           dotnet nuget delete Stackstorm.Connector ${{ env.release_version }} --non-interactive -k ${{ secrets.NUGET_APIKEY_UNLIST }} -s https://api.nuget.org/v3/index.json
           dotnet nuget push Stackstorm.Api.Client/artifacts/Stackstorm.Api.Client.${{ env.release_version }}.nupkg -k ${{ secrets.NUGET_APIKEY }} -s https://api.nuget.org/v3/index.json
           dotnet nuget delete Stackstorm.Api.Client ${{ env.release_version }} --non-interactive -k ${{ secrets.NUGET_APIKEY_UNLIST }} -s https://api.nuget.org/v3/index.json
-      
+
       - name: Upload Release Asset
-        id: upload-release-asset 
+        id: upload-release-asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
