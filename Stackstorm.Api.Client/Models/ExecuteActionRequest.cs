@@ -4,16 +4,15 @@ using System.Collections.Generic;
 
 namespace Stackstorm.Api.Client.Models
 {
- public class ExecuteActionRequest
- {
-  public string action;
-  public Dictionary<string, string> parameters;
- }
+    public class ExecuteActionRequest
+    {
+        public string action;
+        public Dictionary<string, object> parameters;
+    }
 
- public class ExecuteComplexActionRequest
- {
-  public string action;
-  public Dictionary<string, object> parameters;
- }
+    public class ExecuteComplexActionRequest
+    {
+        public string action;
+        public Dictionary<string, object> parameters;
+    }
 }
-

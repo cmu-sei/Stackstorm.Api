@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace Stackstorm.Api.Client.Models
 {
- public class RuleAction
- {
-  public Dictionary<string, string> parameters { get; set; }
-  public string @ref { get; set; }
- }
+    public class RuleAction
+    {
+        public Dictionary<string, object> parameters { get; set; }
+        public string @ref { get; set; }
+    }
 }

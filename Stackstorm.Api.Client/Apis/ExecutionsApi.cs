@@ -57,21 +57,6 @@ namespace Stackstorm.Api.Client.Apis
         /// <param name="actionName">Name of the action. </param>
         /// <param name="parameters">The parameters for the given action. </param>
         /// <returns>The resulting execution; </returns>
-        /// <seealso cref="M:Stackstorm.Api.Client.Apis.IExecutionsApi.ExecuteActionAsync(string,Dictionary{string,string})"/>
-        public async Task<Execution> ExecuteActionAsync(string actionName, Dictionary<string, string> parameters)
-        {
-            ExecuteActionRequest request = new ExecuteActionRequest
-            {
-                action = actionName,
-                parameters = parameters
-            };
-            return await _host.PostApiRequestAsync<Execution, ExecuteActionRequest>("/v1/executions/", request);
-        }
-
-        /// <summary>Executes the action. </summary>
-        /// <param name="actionName">Name of the action. </param>
-        /// <param name="parameters">The parameters for the given action. </param>
-        /// <returns>The resulting execution; </returns>
         /// <seealso cref="M:Stackstorm.Api.Client.Apis.IExecutionsApi.ExecuteActionAsync(string,Dictionary{string,object})"/>
         public async Task<Execution> ExecuteActionAsync(string actionName, Dictionary<string, object> parameters)
         {
