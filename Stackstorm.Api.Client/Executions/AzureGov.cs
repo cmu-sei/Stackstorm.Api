@@ -11,6 +11,8 @@ namespace stackstorm.api.client.Executions
     public interface IAzureGov
     {
         Task<Execution> GetVms(Dictionary<string, object> parameters);
+        Task<Execution> PowerOff(Dictionary<string, object> parameters);
+        Task<Execution> PowerOn(Dictionary<string, object> parameters);
         Task<Execution> VmShellScript(Dictionary<string, object> parameters);
     }
     public class AzureGov : ExecutionsBase, IAzureGov
@@ -24,7 +26,23 @@ namespace stackstorm.api.client.Executions
         /// </summary>
         public async Task<Execution> GetVms(Dictionary<string, object> parameters)
         {
-            return await AddExecution("sei_azure_vm.get_vms", parameters);
+            return await AddExecution("sei_azure_vm.az_get_vms", parameters);
+        }
+
+        /// <summary>
+        /// Powers off a virtual machines from an Azure Gov Resource Group
+        /// </summary>
+        public async Task<Execution> PowerOff(Dictionary<string, object> parameters)
+        {
+            return await AddExecution("sei_azure_vm.az_vm_power_off", parameters);
+        }
+
+        /// <summary>
+        /// Powers on a virtual machines from an Azure Gov Resource Group
+        /// </summary>
+        public async Task<Execution> PowerOn(Dictionary<string, object> parameters)
+        {
+            return await AddExecution("sei_azure_vm.az_vm_power_on", parameters);
         }
 
         /// <summary>
@@ -32,7 +50,7 @@ namespace stackstorm.api.client.Executions
         /// </summary>
         public async Task<Execution> VmShellScript(Dictionary<string, object> parameters)
         {
-            return await AddExecution("sei_azure_vm.vm_shell_script", parameters);
+            return await AddExecution("sei_azure_vm.az_vm_shell_script", parameters);
         }
 
     }

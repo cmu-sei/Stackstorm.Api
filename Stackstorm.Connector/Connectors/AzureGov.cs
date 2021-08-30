@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using Stackstorm.Connector.Models.Vsphere;
 using Stackstorm.Api.Client;
-using Stackstorm.Api.Client.Extensions;
 using NLog.Fluent;
 
 namespace Stackstorm.Connector
@@ -20,9 +18,102 @@ namespace Stackstorm.Connector
         {
             _client = client;
         }
-        public async Task<Models.AzureGov.Responses.VmShellScript> ShellScript(Models.AzureGov.Requests.VmShellScript request)
+        public async Task<Models.AzureGov.Responses.ResponseBase> GetVms(Models.AzureGov.Requests.BaseRequest request)
         {
-            var returnObject = new Models.AzureGov.Responses.VmShellScript();
+            var returnObject = new Models.AzureGov.Responses.ResponseBase();
+            var parameters = new Dictionary<string, object>
+                {{"tenant", request.Tenant}, {"resource_group", request.ResourceGroup}, {"subscription_id", request.SubscriptionId}, {"client_id", request.ClientId}, {"client_secret", request.ClientSecret}, {"token_url", request.TokenUrl}, {"resource_url", request.ResourceUrl}};
+            var executionResult = await _client.AzureGov.GetVms(parameters);
+            Log.Trace($"ExecutionResult: {executionResult}");
+
+            try
+            {
+                returnObject.Id = executionResult.id;
+                var resultObject = (JObject)executionResult.result;
+                var stdout = ((JValue)resultObject.GetValue("stdout")).ToString();
+                var stderr = ((JValue)resultObject.GetValue("stderr")).ToString();
+                if (stderr == "")
+                {
+                    returnObject.Value = resultObject.GetValue("result").ToString();
+                }
+                else
+                {
+                    returnObject.Value = "***ERROR***: " + stderr;
+
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Object was not in expected format: {e}");
+                Console.WriteLine(e);
+                returnObject.Exception = e;
+                returnObject.Value = e.InnerException != null ? e.InnerException.Message : e.Message;
+            }
+
+            return returnObject;
+        }
+
+        public async Task<Models.AzureGov.Responses.ResponseBase> VmPowerOff(Models.AzureGov.Requests.VmOnOff request)
+        {
+            var returnObject = new Models.AzureGov.Responses.ResponseBase();
+            var parameters = new Dictionary<string, object>
+                {{"vm_name", request.VmName}};
+            var executionResult = await _client.AzureGov.PowerOff(parameters);
+            Log.Trace($"ExecutionResult: {executionResult}");
+
+            try
+            {
+                returnObject.Id = executionResult.id;
+                var resultObject = (JObject)executionResult.result;
+                var stderr = ((JValue)resultObject.GetValue("stderr")).ToString();
+                if (stderr == "")
+                {
+                    returnObject.Value = ((JValue)resultObject.GetValue("result")).ToString();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Object was not in expected format: {e}");
+                Console.WriteLine(e);
+                returnObject.Exception = e;
+                returnObject.Value = e.InnerException != null ? e.InnerException.Message : e.Message;
+            }
+
+            return returnObject;
+        }
+
+        public async Task<Models.AzureGov.Responses.ResponseBase> VmPowerOn(Models.AzureGov.Requests.VmOnOff request)
+        {
+            var returnObject = new Models.AzureGov.Responses.ResponseBase();
+            var parameters = new Dictionary<string, object>
+                {{"vm_name", request.VmName}};
+            var executionResult = await _client.AzureGov.PowerOn(parameters);
+            Log.Trace($"ExecutionResult: {executionResult}");
+
+            try
+            {
+                returnObject.Id = executionResult.id;
+                var resultObject = (JObject)executionResult.result;
+                var stderr = ((JValue)resultObject.GetValue("stderr")).ToString();
+                if (stderr == "")
+                {
+                    returnObject.Value = ((JValue)resultObject.GetValue("result")).ToString();
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Object was not in expected format: {e}");
+                Console.WriteLine(e);
+                returnObject.Exception = e;
+                returnObject.Value = e.InnerException != null ? e.InnerException.Message : e.Message;
+            }
+
+            return returnObject;
+        }
+
+        public async Task<Models.AzureGov.Responses.ResponseBase> ShellScript(Models.AzureGov.Requests.VmShellScript request)
+        {
+            var returnObject = new Models.AzureGov.Responses.ResponseBase();
             var scriptLines = request.Script.Split("\n");
             var script = "[\"";
             foreach (var line in scriptLines)
