@@ -90,6 +90,7 @@ namespace Stackstorm.Connector
                 returnObject.Id = executionResult.id;
                 var nodes = executionResult.result.ToString().ToJObject()["result"];
                 var nodesString = nodes.ToString();
+                // this check is required because of Stackstorm python 2 and 3 differences
                 if (nodesString.StartsWith("dict_values("))
                 {
                     nodesString = nodesString.Substring(12, nodesString.Length - 30);
