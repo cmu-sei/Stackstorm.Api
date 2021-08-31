@@ -21,7 +21,7 @@ namespace Stackstorm.Api.Client
     public class St2Client : ISt2Client, IDisposable
     {
         private static readonly Logger _log = LogManager.GetCurrentClassLogger();
-        
+
         /// <summary> The username. </summary>
         private string _username;
 
@@ -80,6 +80,7 @@ namespace Stackstorm.Api.Client
             VSphere = new VSphere(this);
             Core = new Core(this);
             Email = new Email(this);
+            AzureGov = new AzureGov(this);
         }
 
         /// <summary> Refresh the auth token. </summary>
@@ -90,7 +91,7 @@ namespace Stackstorm.Api.Client
             var client = new RestClient($"{_authUrl}/tokens");
             var request = new RestRequest(Method.POST);
             request.AddHeader("cache-control", "no-cache");
-            
+
             var encoded = Convert.ToBase64String(System.Text.Encoding.GetEncoding("ISO-8859-1").GetBytes($"{_username}:{_password}"));
             request.AddHeader("Authorization", $"Basic {encoded}");
             request.AddHeader("Content-Type", "application/json");
@@ -102,7 +103,7 @@ namespace Stackstorm.Api.Client
                 {
                     _token = JsonConvert.DeserializeObject<TokenResponse>(response.Content);
                     _log.Trace($"Login successful: {_token.token}");
-                    
+
                 }
                 else
                 {
@@ -169,9 +170,9 @@ namespace Stackstorm.Api.Client
             request.AddHeader("cache-control", "no-cache");
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(requestType);
-            
+
             _log.Trace($"{_apiUrl}/{url} POSTED {JsonConvert.SerializeObject(requestType)}");
-            
+
             try
             {
                 var response = client.Execute(request);
@@ -222,6 +223,7 @@ namespace Stackstorm.Api.Client
 
         public IVSphere VSphere { get; private set; }
         public IEmail Email { get; private set; }
+        public IAzureGov AzureGov { get; private set; }
         public ICore Core { get; private set; }
 
         /// <summary> Accessor for the Actions related methods. </summary>

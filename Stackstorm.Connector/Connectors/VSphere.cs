@@ -88,10 +88,17 @@ namespace Stackstorm.Connector
             try
             {
                 returnObject.Id = executionResult.id;
-                var j = executionResult.result.ToString().ToJObject();
+                var nodes = executionResult.result.ToString().ToJObject()["result"];
+                var nodesString = nodes.ToString();
+                // this check is required because of Stackstorm python 2 and 3 differences
+                if (nodesString.StartsWith("dict_values("))
+                {
+                    nodesString = nodesString.Substring(12, nodesString.Length - 30);
+                    nodes = JArray.Parse(nodesString);
+                }
 
                 //get vms and spit out
-                foreach (var node in j["result"])
+                foreach (var node in nodes)
                 {
                     returnObject.Vms.Add(new Responses.Vm(node["moid"], node["name"], node["runtime.powerState"], node["config.uuid"]));
                 }

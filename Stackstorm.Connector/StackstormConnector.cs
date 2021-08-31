@@ -8,9 +8,11 @@ namespace Stackstorm.Connector
     {
         public VSphere VSphere { get; private set; }
         public Email Email { get; private set; }
+        public AzureGov AzureGov { get; private set; }
 
         public StackstormConnector(string url, string username, string password) : base(url, username, password)
         {
+            this.AzureGov = new AzureGov(this.Client);
             this.Email = new Email(this.Client);
             this.VSphere = new VSphere(this.Client);
         }
