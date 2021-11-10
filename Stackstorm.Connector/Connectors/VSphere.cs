@@ -217,8 +217,13 @@ namespace Stackstorm.Connector
         {
             var returnObject = new Responses.VmStringValue();
             var executionResult = await _client.VSphere.GuestFileUploadContent(new Dictionary<string, object>
-                {{"vm_id", request.Moid}, {"username", request.Username}, {"password", request.Password},
-                    {"guest_file_path", request.GuestFilePath}, {"file_content", request.GuestFileContent}});
+                {
+                    {"vm_id", request.Moid},
+                    {"username", request.Username},
+                    {"password", request.Password},
+                    {"guest_file_path", request.GuestFilePath},
+                    {"file_content", request.GuestFileContent},
+                    {"file_path", request.FilePath}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try

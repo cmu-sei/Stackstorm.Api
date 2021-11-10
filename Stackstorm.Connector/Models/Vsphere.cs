@@ -9,9 +9,9 @@ namespace Stackstorm.Connector.Models.Vsphere
     {
         public class FileRead
         {
-            public string Moid { get; set; } 
-            public string Username { get; set; } 
-            public string Password { get; set; } 
+            public string Moid { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
             public string GuestFilePath { get; set; }
         }
 
@@ -22,6 +22,7 @@ namespace Stackstorm.Connector.Models.Vsphere
             public string Password { get; set; }
             public string GuestFilePath { get; set; }
             public string GuestFileContent { get; set; }
+            public string FilePath { get; set; }
         }
 
         public class Command
