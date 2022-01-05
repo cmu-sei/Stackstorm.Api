@@ -120,7 +120,7 @@ namespace Stackstorm.Connector.Models.Vsphere
                 this.Name = name.ToString();
                 if (powerState != null)
                 {
-                    this.PowerState = powerState.ToString().ToUpper().Contains("ON", StringComparison.CurrentCultureIgnoreCase)
+                    this.PowerState = powerState.ToString().ToUpper().IndexOf("ON", StringComparison.CurrentCultureIgnoreCase) >= 0
                         ? PowerStates.On
                         : PowerStates.Off;
                 }

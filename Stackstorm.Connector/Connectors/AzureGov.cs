@@ -114,23 +114,23 @@ namespace Stackstorm.Connector
         public async Task<Models.AzureGov.Responses.ResponseBase> ShellScript(Models.AzureGov.Requests.VmShellScript request)
         {
             var returnObject = new Models.AzureGov.Responses.ResponseBase();
-            var scriptLines = request.Script.Split("\n");
+            var scriptLines = request.Script.Split('\n');
             var script = "[\"";
             foreach (var line in scriptLines)
             {
                 script = script + line.Replace("\"", "\\\"") + "\",\"";
             }
             script = script.Substring(0, script.Length - 2) + "]";
-            var paramLines = request.Params.Split("\n");
+            var paramLines = request.Params.Split('\n');
             var scriptParams = "[";
             if (paramLines[0].Contains("="))
             {
                 foreach (var line in paramLines)
                 {
-                    var parts = line.Split("=");
+                    var parts = line.Split('=');
                     scriptParams = scriptParams + "{\"name\": \"" + parts[0] + "\",\"value\":\"" + parts[1].Replace("\"", "\\\"") + "\"},";
                 }
-                scriptParams = scriptParams.Substring(0, scriptParams.Length-1) + "]";
+                scriptParams = scriptParams.Substring(0, scriptParams.Length - 1) + "]";
             }
             else
             {
