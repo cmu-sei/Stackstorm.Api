@@ -20,12 +20,37 @@ namespace Stackstorm.Connector
         {
             _client = client;
         }
-        public async Task<Models.Linux.Responses.FileTouch> FileTouch(Models.Linux.Requests.FileTouch request)
+        public async Task<Models.Linux.Responses.LinuxFileTouch> LinuxFileTouch(Models.Linux.Requests.LinuxFileTouch request)
         {
-            var returnObject = new Models.Linux.Responses.FileTouch();
-            var executionResult = await _client.Linux.FileTouch(new Dictionary<string, object>
+            var returnObject = new Models.Linux.Responses.LinuxFileTouch();
+            var executionResult = await _client.Linux.LinuxFileTouch(new Dictionary<string, object>
                 {{"username", request.Username}, {"password", request.Password}, {"hosts", request.Hosts}, {"port", request.Port},
                  {"file", request.File}, /*{"sudo", request.Sudo}, */ {"cwd", request.Cwd}, {"env", request.Env}});
+            Log.Trace($"ExecutionResult: {executionResult}");
+
+            try
+            {
+                returnObject.Id = executionResult.id;
+                returnObject.Success = executionResult.status.ToLower() == "succeeded";
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Object was not in expected format: {e}");
+                Console.WriteLine(e);
+                returnObject.Exception = e;
+                returnObject.Success = false;
+            }
+
+            return returnObject;
+        }
+
+       public async Task<Models.Linux.Responses.LinuxRm> LinuxRm(Models.Linux.Requests.LinuxRm request)
+        {
+            var returnObject = new Models.Linux.Responses.LinuxRm();
+            var executionResult = await _client.Linux.LinuxRm(new Dictionary<string, object>
+                {{"username", request.Username}, {"password", request.Password}, {"hosts", request.Hosts}, {"port", request.Port},
+                 {"target", request.Target}, {"sudo", request.Sudo}, {"cwd", request.Cwd}, {"env", request.Env}, {"args", request.Args},
+                 {"force", request.Force}, {"recursive", request.Recursive}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try

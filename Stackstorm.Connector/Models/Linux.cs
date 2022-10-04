@@ -7,7 +7,7 @@ namespace Stackstorm.Connector.Models.Linux
 {
     public class Requests
     {
-        public class FileTouch
+        public class LinuxFileTouch
         {
             public string File { get; set; }
             public string Hosts { get; set; }
@@ -17,6 +17,21 @@ namespace Stackstorm.Connector.Models.Linux
             public string Cwd { get; set; }
             //public bool Sudo { get; set; }
             public string Env { get; set; }
+        }
+
+        public class LinuxRm
+        {
+            public string Target { get; set; }
+            public string Hosts { get; set; }
+            public string Port { get; set; }
+            public string Username { get; set; }
+            public string Password { get; set; }
+            public string Cwd { get; set; }
+            public string Args { get; set; }
+            public bool Sudo { get; set; }
+            public string Env { get; set; }
+            public bool Recursive { get; set; }
+            public bool Force { get; set; }
         }
     }
 
@@ -28,9 +43,15 @@ namespace Stackstorm.Connector.Models.Linux
             public Exception Exception { get; set; }
         }
 
-        public class FileTouch : ResponseBase
+        public class LinuxFileTouch : ResponseBase
         {
             public bool Success { get; set; }
         }
+
+        public class LinuxRm : ResponseBase
+        {
+            public bool Success { get; set; }
+        }
+
     }
 }

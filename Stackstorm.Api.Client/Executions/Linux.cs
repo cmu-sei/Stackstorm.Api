@@ -10,7 +10,8 @@ namespace stackstorm.api.client.Executions
 {
     public interface ILinux
     {
-        Task<Execution> FileTouch(Dictionary<string, object> parameters);
+        Task<Execution> LinuxFileTouch(Dictionary<string, object> parameters);
+        Task<Execution> LinuxRm(Dictionary<string, object> parameters);
     }
     public class Linux : ExecutionsBase, ILinux
     {
@@ -19,11 +20,20 @@ namespace stackstorm.api.client.Executions
         }
 
         /// <summary>
-        /// Sends an Linux
+        /// Sends an Linux file touch command
         /// </summary>
-        public async Task<Execution> FileTouch(Dictionary<string, object> parameters)
+        public async Task<Execution> LinuxFileTouch(Dictionary<string, object> parameters)
         {
             return await AddExecution("linux.file_touch", parameters);
+        }
+
+
+        /// <summary>
+        /// Sends an Linux rm command
+        /// </summary>
+        public async Task<Execution> LinuxRm(Dictionary<string, object> parameters)
+        {
+            return await AddExecution("linux.rm", parameters);
         }
     }
 }
