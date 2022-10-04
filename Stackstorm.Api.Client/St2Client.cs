@@ -80,6 +80,7 @@ namespace Stackstorm.Api.Client
             VSphere = new VSphere(this);
             Core = new Core(this);
             Email = new Email(this);
+            Linux = new Linux(this);
             AzureGov = new AzureGov(this);
         }
 
@@ -223,6 +224,7 @@ namespace Stackstorm.Api.Client
 
         public IVSphere VSphere { get; private set; }
         public IEmail Email { get; private set; }
+        public ILinux Linux { get; private set; }
         public IAzureGov AzureGov { get; private set; }
         public ICore Core { get; private set; }
 
