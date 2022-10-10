@@ -25,7 +25,7 @@ namespace Stackstorm.Connector
             var returnObject = new Models.Linux.Responses.LinuxFileTouch();
             var executionResult = await _client.Linux.LinuxFileTouch(new Dictionary<string, object>
                 {{"username", request.Username}, {"password", request.Password}, {"hosts", request.Hosts}, {"port", request.Port},
-                 {"file", request.File}, /*{"sudo", request.Sudo}, */ {"cwd", request.Cwd}, {"env", request.Env}});
+                 {"file", request.File}, {"sudo", request.Sudo}, {"cwd", request.Cwd}, {"env", request.Env}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
             try

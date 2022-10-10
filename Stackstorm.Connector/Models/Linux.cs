@@ -15,8 +15,8 @@ namespace Stackstorm.Connector.Models.Linux
             public string Username { get; set; }
             public string Password { get; set; }
             public string Cwd { get; set; }
-            //public bool Sudo { get; set; }
             public string Env { get; set; }
+            public bool Sudo { get; set; }
         }
 
         public class LinuxRm
