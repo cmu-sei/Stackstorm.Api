@@ -13,7 +13,7 @@ namespace Stackstorm.Connector.Models.Linux
             public string Hosts { get; set; }
             public string Port { get; set; }
             public string Username { get; set; }
-            public string Password { get; set; }
+            public string PrivateKey { get; set; }
             public string Cwd { get; set; }
             public string Env { get; set; }
             public bool Sudo { get; set; }
@@ -25,7 +25,7 @@ namespace Stackstorm.Connector.Models.Linux
             public string Hosts { get; set; }
             public string Port { get; set; }
             public string Username { get; set; }
-            public string Password { get; set; }
+            public string PrivateKey { get; set; }
             public string Cwd { get; set; }
             public string Args { get; set; }
             public bool Sudo { get; set; }

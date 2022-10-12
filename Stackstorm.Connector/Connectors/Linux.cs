@@ -24,7 +24,7 @@ namespace Stackstorm.Connector
         {
             var returnObject = new Models.Linux.Responses.LinuxFileTouch();
             var executionResult = await _client.Linux.LinuxFileTouch(new Dictionary<string, object>
-                {{"username", request.Username}, {"password", request.Password}, {"hosts", request.Hosts}, {"port", request.Port},
+                {{"username", request.Username}, {"private_key", request.PrivateKey}, {"hosts", request.Hosts}, {"port", request.Port},
                  {"file", request.File}, {"sudo", request.Sudo}, {"cwd", request.Cwd}, {"env", request.Env}});
             Log.Trace($"ExecutionResult: {executionResult}");
 
@@ -48,7 +48,7 @@ namespace Stackstorm.Connector
         {
             var returnObject = new Models.Linux.Responses.LinuxRm();
             var executionResult = await _client.Linux.LinuxRm(new Dictionary<string, object>
-                {{"username", request.Username}, {"password", request.Password}, {"hosts", request.Hosts}, {"port", request.Port},
+                {{"username", request.Username}, {"private_key", request.PrivateKey}, {"hosts", request.Hosts}, {"port", request.Port},
                  {"target", request.Target}, {"sudo", request.Sudo}, {"cwd", request.Cwd}, {"env", request.Env}, {"args", request.Args},
                  {"force", request.Force}, {"recursive", request.Recursive}});
             Log.Trace($"ExecutionResult: {executionResult}");
