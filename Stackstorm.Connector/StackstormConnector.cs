@@ -6,6 +6,7 @@ namespace Stackstorm.Connector
 {
     public class StackstormConnector : StackstormBase
     {
+        public Core Core { get; private set; }
         public VSphere VSphere { get; private set; }
         public Email Email { get; private set; }
         public Linux Linux { get; private set; }
@@ -13,6 +14,7 @@ namespace Stackstorm.Connector
 
         public StackstormConnector(string url, string username, string password) : base(url, username, password)
         {
+            this.Core = new Core(this.Client);
             this.AzureGov = new AzureGov(this.Client);
             this.Email = new Email(this.Client);
             this.Linux = new Linux(this.Client);
