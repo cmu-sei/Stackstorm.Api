@@ -14,11 +14,13 @@ namespace Stackstorm.Api.Client.Models
         public Action action { get; set; }
         public string id { get; set; }
         public string end_timestamp { get; set; }
-        
+
         public string elapsed_seconds{ get; set; }
-        
+
         public object result { get; set; }
-        
+
+        public string output { get; set; }
+
         public Execution()
         {
             this.result = new object();
@@ -28,7 +30,7 @@ namespace Stackstorm.Api.Client.Models
         {
             return this.status.ToUpper() != "REQUESTED" && this.status.ToUpper() != "SCHEDULED" && this.status.ToUpper() != "RUNNING";
         }
-        
+
     }
 
 

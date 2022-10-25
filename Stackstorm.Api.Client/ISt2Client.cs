@@ -18,6 +18,12 @@ namespace Stackstorm.Api.Client
         /// <returns> The Typed response. </returns>
         Task<TResponseType> GetApiRequestAsync<TResponseType>(string url);
 
+        /// <summary> Make an asynchronous GET request to and API endpoint that returns a string. </summary>
+        /// <typeparam name="TResponseType"> Expected Type of the response. </typeparam>
+        /// <param name="url"> URL of the GET request. </param>
+        /// <returns> The Typed response. </returns>
+        Task<string> GetApiRequestStringAsync(string url);
+
         /// <summary> Make an asynchronous POST request to the API. </summary>
         /// <typeparam name="TResponseType"> Expected Type of the response. </typeparam>
         /// <typeparam name="TRequestType">  Expected Type of of the request message. </typeparam>
@@ -45,7 +51,7 @@ namespace Stackstorm.Api.Client
         /// <summary> Accessor for the Rules related methods. </summary>
         /// <value> The Rules accessor. </value>
         IRulesApi Rules { get; }
-        
+
         IVSphere VSphere { get; }
         ICore Core { get; }
 

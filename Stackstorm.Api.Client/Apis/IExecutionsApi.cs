@@ -14,6 +14,11 @@ namespace Stackstorm.Api.Client.Apis
         /// <returns> The execution. </returns>
         Task<Execution> GetExecutionAsync(string id);
 
+        /// <summary> Gets execution output. </summary>
+        /// <param name="id"> The identifier. </param>
+        /// <returns> The execution output. </returns>
+        Task<string> GetExecutionOutputAsync(string id);
+
         /// <summary> Gets a list of executions. </summary>
         /// <param name="limit"> The number of items to return (default 5). </param>
         /// <returns> A list of <see cref="Execution"/>. </returns>

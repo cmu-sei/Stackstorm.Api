@@ -153,6 +153,30 @@ namespace Stackstorm.Api.Client
             }
         }
 
+        /// <summary> Make an asynchronous GET request to an API endpoint returning a string. </summary>
+        /// <typeparam name="TResponseType"> Expected Type of the response. </typeparam>
+        /// <param name="url"> URL of the GET request. </param>
+        /// <returns> The Typed response. </returns>
+        public async Task<string> GetApiRequestStringAsync(string url)
+        {
+            var client = new RestClient($"{_apiUrl}/{url}");
+            var request = new RestRequest(Method.GET);
+            request.AddHeader("cache-control", "no-cache");
+            request.AddHeader("x-auth-token", _token.token); //HACK
+            request.AddHeader("Content-Type", "application/json");
+
+            try
+            {
+                var response = client.Execute(request);
+                return (string) response.Content;
+            }
+            catch (HttpRequestException hre)
+            {
+                _log.Error($"bad req!");
+                throw new FailedRequestException(hre.Message);
+            }
+        }
+
         /// <summary> Make an asynchronous POST request to the API. </summary>
         /// <typeparam name="TResponseType"> Expected Type of the response. </typeparam>
         /// <typeparam name="TRequestType">  Expected Type of of the request message. </typeparam>

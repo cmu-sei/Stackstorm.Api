@@ -34,6 +34,14 @@ namespace Stackstorm.Api.Client.Apis
             return await _host.GetApiRequestAsync<Execution>("/v1/executions/" + id);
         }
 
+        /// <summary>Gets execution output. </summary>
+        /// <param name="id">The identifier. </param>
+        /// <returns>The execution output. </returns>
+        public async Task<string> GetExecutionOutputAsync(string id)
+        {
+            return await _host.GetApiRequestStringAsync("/v1/executions/" + id + "/output");
+        }
+
         /// <summary>Gets a list of executions. </summary>
         /// <param name="limit">The number of items to return (default 5). </param>
         /// <returns>A list of <see cref="Execution"/>. </returns>

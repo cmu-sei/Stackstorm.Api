@@ -41,16 +41,18 @@ namespace Stackstorm.Connector.Models.Linux
         {
             public string Id { get; set; }
             public Exception Exception { get; set; }
+            public string Value { get; set; }
+            public bool Success { get; set; }
+
+
         }
 
         public class LinuxFileTouch : ResponseBase
         {
-            public bool Success { get; set; }
         }
 
         public class LinuxRm : ResponseBase
         {
-            public bool Success { get; set; }
         }
 
     }

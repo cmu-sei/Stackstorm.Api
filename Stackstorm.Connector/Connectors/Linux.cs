@@ -31,6 +31,7 @@ namespace Stackstorm.Connector
             try
             {
                 returnObject.Id = executionResult.id;
+                returnObject.Value = executionResult.output;
                 returnObject.Success = executionResult.status.ToLower() == "succeeded";
             }
             catch (Exception e)
@@ -56,6 +57,7 @@ namespace Stackstorm.Connector
             try
             {
                 returnObject.Id = executionResult.id;
+                returnObject.Value = executionResult.output;
                 returnObject.Success = executionResult.status.ToLower() == "succeeded";
             }
             catch (Exception e)

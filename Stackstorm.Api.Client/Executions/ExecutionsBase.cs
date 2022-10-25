@@ -50,6 +50,15 @@ namespace stackstorm.api.client.Executions
                 _log.Trace($"Execution status is {executionResult.status}");
                 Thread.Sleep(2000);
             }
+            // Get output of the task from the stackstorm API
+            try {
+                var executionOutput = await _host.Executions.GetExecutionOutputAsync(executionResult.id);
+                executionResult.output = executionOutput;
+            }
+            catch (Exception e)
+            {
+                _log.Error(e);
+            }
 
             return executionResult;
         }
