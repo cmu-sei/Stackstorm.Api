@@ -26,6 +26,7 @@ namespace Stackstorm.Connector.Models.Email
         {
             public string Id { get; set; }
             public Exception Exception { get; set; }
+            public string Value { get; set; }
         }
 
         public class EmailSent : ResponseBase
